@@ -1,14 +1,56 @@
-RANDGEN:         ; generate a rand no using the system time
-RANDSTART:
-   MOV AH, 00h  ; interrupts to get system time        
-   INT 1AH      ; CX:DX now hold number of clock ticks since midnight      
+ORG 000H
+SJMP MAIN
+ORG 003H // sets the starting address for the ISR
+ACALL ISR // calls the ISR subroutine when S2 is pressed
+RETI // return from interrrupt
 
-   mov  ax, dx
-   xor  dx, dx
-   mov  cx, 10    
-   div  cx       ; here dx contains the remainder of the division - from 0 to 9
+MAIN:SETB IP.0 // this part sets the initial conditions
+     SETB TCON.0
+     SETB IE.0
+     SETB IE.7
+     MOV P0,#00000000B
+     MOV P1,#00000000B
+     MOV DPTR,#LUT // moves the starting address of LUT to DPTR
 
-   add  dl, '0'  ; to ascii from '0' to '9'
-   mov ah, 2h   ; call interrupt to display a value in DL
-   int 21h    
-RET  
+LABEL:MOV R6,#99D // this part generates the random number
+      LOOP:MOV A,R6
+      DJNZ R6,LOOP
+      SJMP LABEL
+
+ISR: MOV A,R6 // Subroutine ISR displays the current random number
+     MOV B,#10D
+     DIV AB
+     SETB P1.2
+     ACALL DISPLAY
+     MOV P0,A
+     ACALL DELAY
+     MOV A,B
+     CLR P1.2
+     SETB P1.1
+     ACALL DISPLAY
+     MOV P0,A
+     ACALL DELAY
+     CLR P1.1
+     SJMP ISR
+     RET
+
+DELAY: MOV R3,#02H // this subroutine creates 1mS delay for switching the displays
+DEL1: MOV R2,#0FAH
+DEL2: DJNZ R2,DEL2
+      DJNZ R3,DEL1
+      RET
+
+DISPLAY: MOVC A,@A+DPTR // produces the digit drive pattern for the current digit in A
+         RET
+
+LUT: DB 3FH // Look up table
+     DB 06H
+     DB 5BH
+     DB 4FH
+     DB 66H
+     DB 6DH
+     DB 7DH
+     DB 07H
+     DB 7FH
+     DB 6FH
+     END
