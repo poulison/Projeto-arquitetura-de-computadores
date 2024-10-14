@@ -10,9 +10,9 @@ org 0030h
 START:
 	acall lcd_init
 	MOV A, #'M'
-	ACALL sendCharacter	; send data in A to LCD module
+	ACALL sendCharacter
 	MOV A, #'E'
-	ACALL sendCharacter	; send data in A to LCD module
+	ACALL sendCharacter	
 	MOV A, #'M'
 	ACALL sendCharacter
 	MOV A, #'O'
@@ -27,14 +27,67 @@ START:
 	ACALL sendCharacter	; send data in A to LCD module
 	ACALL clearDisplay
 	LJMP vetor
+	
 	JMP $
 vetor:
-mov 
+	MOV 30h,#01h
+	MOV 31h,#02h
+	MOV 32h,#03h
+	MOV 33h,#04h
+	MOV 34h,#05h
+	MOV 35h,#06h
+	MOV 36h,#07h
+	RET
+
+
+leituraTeclado:
+	MOV R0, #0			; clear R0 - the first key is key0
+
+	; scan row0
+	MOV P0, #0FFh	
+	CLR P0.0			; clear row0
+	CALL colScan		; call column-scan subroutine
+	JB F0, finish		; | if F0 is set, jump to end of program 
+						; | (because the pressed key was found and its number is in  R0)
+	; scan row1
+	SETB P0.0			; set row0
+	CLR P0.1			; clear row1
+	CALL colScan		; call column-scan subroutine
+	JB F0, finish		; | if F0 is set, jump to end of program 
+						; | (because the pressed key was found and its number is in  R0)
+	; scan row2
+	SETB P0.1			; set row1
+	CLR P0.2			; clear row2
+	CALL colScan		; call column-scan subroutine
+	JB F0, finish		; | if F0 is set, jump to end of program 
+						; | (because the pressed key was found and its number is in  R0)
+	; scan row3
+	SETB P0.2			; set row2
+	CLR P0.3			; clear row3
+	CALL colScan		; call column-scan subroutine
+	JB F0, finish		; | if F0 is set, jump to end of program 
+						; | (because the pressed key was found and its number is in  R0)
+finish:
+	RET
+
+; column-scan subroutine
+colScan:
+	JNB P0.4, gotKey	; if col0 is cleared - key found
+	INC R0				; otherwise move to next key
+	JNB P0.5, gotKey	; if col1 is cleared - key found
+	INC R0				; otherwise move to next key
+	JNB P0.6, gotKey	; if col2 is cleared - key found
+	INC R0				; otherwise move to next key
+	RET					; return from subroutine - key not found
+gotKey:
+	SETB F0				; key found - set F0
+	RET					; and return from subroutine
+
 
 
 
 ; initialise the display
-; see instruction set for details
+; see instruction set for detailsx
 lcd_init:
 
 	CLR RS		; clear RS - indicates that instructions are being sent to the module
