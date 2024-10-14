@@ -1,23 +1,23 @@
 ORG 000H
 SJMP MAIN
-ORG 003H // sets the starting address for the ISR
-ACALL ISR // calls the ISR subroutine when S2 is pressed
-RETI // return from interrrupt
+ORG 003H ;define o endereço inicial para o ISR
+ACALL ISR ;chama a sub-rotina ISR quando S2 é pressionado
+RETI ;retornar da interrupção
 
-MAIN:SETB IP.0 // this part sets the initial conditions
+MAIN:SETB IP.0 ;esta parte define as condições iniciais
      SETB TCON.0
      SETB IE.0
      SETB IE.7
      MOV P0,#00000000B
      MOV P1,#00000000B
-     MOV DPTR,#LUT // moves the starting address of LUT to DPTR
+     MOV DPTR,#LUT ;move o endereço inicial de LUT para DPTR
 
-LABEL:MOV R6,#99D // this part generates the random number
+LABEL:MOV R6,#99D ;esta parte gera o número aleatório
       LOOP:MOV A,R6
       DJNZ R6,LOOP
       SJMP LABEL
 
-ISR: MOV A,R6 // Subroutine ISR displays the current random number
+ISR: MOV A,R6 ;A sub-rotina ISR exibe o número aleatório atual
      MOV B,#10D
      DIV AB
      SETB P1.2
@@ -34,16 +34,16 @@ ISR: MOV A,R6 // Subroutine ISR displays the current random number
      SJMP ISR
      RET
 
-DELAY: MOV R3,#02H // this subroutine creates 1mS delay for switching the displays
+DELAY: MOV R3,#02H ;esta sub-rotina cria um atraso de 1mS para alternar os displays
 DEL1: MOV R2,#0FAH
 DEL2: DJNZ R2,DEL2
       DJNZ R3,DEL1
       RET
 
-DISPLAY: MOVC A,@A+DPTR // produces the digit drive pattern for the current digit in A
+DISPLAY: MOVC A,@A+DPTR ;produz o padrão de unidade de dígito para o dígito atual em A
          RET
 
-LUT: DB 3FH // Look up table
+LUT: DB 3FH ;Consultar tabela
      DB 06H
      DB 5BH
      DB 4FH
