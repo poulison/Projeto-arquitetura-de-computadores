@@ -1,3 +1,6 @@
+;Paulo Andre de Oliveira Hirata RA:24.123.086-1
+;Victor Merker Binda RA:24.123.086-0
+
 
 ; --- Mapeamento de Hardware (8051) ---
     RS      equ     P1.3    ;Reg Select ligado em P1.3
