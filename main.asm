@@ -1,3 +1,4 @@
+
 ; --- Mapeamento de Hardware (8051) ---
     RS      equ     P1.3    ;Reg Select ligado em P1.3
     EN      equ     P1.2    ;Enable ligado em P1.2
@@ -8,6 +9,17 @@ org 0000h
 
 org 0030h
 START:
+	
+	MOV 30H,#01h;MONATO O VETRO QUE VAI SERVIR PARA MEMORIA
+	MOV 31h,#02h
+	MOV 32h,#03h
+	MOV 33h,#04h
+	MOV 34h,#05h
+	MOV 35h,#06h
+	MOV 36h,#07h
+
+  
+
 	acall lcd_init
 	MOV A, #'M'
 	ACALL sendCharacter
@@ -24,20 +36,23 @@ START:
 	MOV A, #'Z'
 	ACALL sendCharacter
 	MOV A, #'E'
-	ACALL sendCharacter	; manda data no A para o modulo LCD
+	ACALL sendCharacter	
 	ACALL clearDisplay
-	LJMP vetor
+	MOV r5,#07H
+	ljmp 
 	
 	JMP $
-vetor:
-	MOV 30h,#01h
-	MOV 31h,#02h
-	MOV 32h,#03h
-	MOV 33h,#04h
-	MOV 34h,#05h
-	MOV 35h,#06h
-	MOV 36h,#07h
-	RET
+PRIMEIRO_NUMERO:
+	MOV A, 30H
+	ACALL leituraTeclado
+	JNB F0, PRIMEIRO_NUMRO
+	CJNE A,R0,derrota
+
+SEGUNDO_NUMERO:
+
+	
+	
+	
 
 
 leituraTeclado:
@@ -272,3 +287,38 @@ delay:
 	MOV R0, #50
 	DJNZ R0, $
 	RET
+derrota:
+	acall lcd_init
+	MOV A, #'E'
+	ACALL sendCharacter
+	MOV A, #'R'
+	ACALL sendCharacter	
+	MOV A, #'R'
+	ACALL sendCharacter
+	MOV A, #'O'
+	ACALL sendCharacter
+	MOV A, #'U'
+	ACALL sendCharacter	; manda data no A para o modulo LCD
+	ACALL clearDisplay
+	LJMP START
+
+venceu:	
+	acall lcd_init
+	MOV A, #'A'
+	ACALL sendCharacter
+	MOV A, #'C'
+	ACALL sendCharacter	
+	MOV A, #'R'
+	ACALL sendCharacter
+	MOV A, #'T'
+	ACALL sendCharacter
+	MOV A, #'O'
+	ACALL sendCharacter
+	MOV A, #'U'
+	ACALL sendCharacter
+	ACALL clearDisplay
+	LJMP START
+
+	
+
+	
