@@ -13,7 +13,7 @@ org 0000h
 org 0030h
 START:
 	
-	MOV 30H,#01h;MONATO O VETRO QUE VAI SERVIR PARA MEMORIA
+	MOV 30H,#01h;MONTANDO O VETRO QUE VAI SERVIR PARA MEMORIA
 	MOV 31h,#02h
 	MOV 32h,#03h
 	MOV 33h,#04h
@@ -40,23 +40,51 @@ START:
 	ACALL sendCharacter
 	MOV A, #'E'
 	ACALL sendCharacter	
+	CALL delay
 	ACALL clearDisplay
-	MOV r5,#07H
-	ljmp 
+	
+
+
+	acall lcd_init
+	mov A,#02h
+	ACALL posicionaCursor
+	MOV A, #'U'
+	ACALL sendCharacter	
+	MOV A, #'M'
+	ACALL sendCharacter
+	MOV A, #' '
+	ACALL sendCharacter
+	MOV A, #'N'
+	ACALL sendCharacter
+	MOV A, #'U'
+	ACALL sendCharacter
+	MOV A, #'M'
+	ACALL sendCharacter
+	MOV A, #'E'
+	ACALL sendCharacter	
+	MOV A, #'R'
+	ACALL sendCharacter
+	MOV A, #'O'
+	ACALL sendCharacter	
+	CALL delay
+	ACALL clearDisplay
+
+	acall lcd_init
+	MOV A, 30H
+	ACALL sendCharacter
+	CALL delay
+	ACALL clearDisplay
+
+	LJMP PRIMEIRO_NUMERO
 	
 	JMP $
 PRIMEIRO_NUMERO:
-	MOV A, 30H
 	ACALL leituraTeclado
-	JNB F0, PRIMEIRO_NUMRO
-	CJNE A,R0,derrota
-
+	JNB F0, PRIMEIRO_NUMERO
+	CJNE A,B,SALTO_INTERMEDIARIO
+	ACALL SEGUNDO_NUMERO
 SEGUNDO_NUMERO:
-
-	
-	
-	
-
+NOP
 
 leituraTeclado:
 	MOV R0, #0			; Clear no R0 - a primeira Key e a Key0
@@ -87,7 +115,20 @@ leituraTeclado:
 						; | (porque a chave pressionada foi encontrada e o numero esta em R0)
 finish:
 	RET
-
+derrota:
+	acall lcd_init
+	MOV A, #'E'
+	ACALL sendCharacter
+	MOV A, #'R'
+	ACALL sendCharacter	
+	MOV A, #'R'
+	ACALL sendCharacter
+	MOV A, #'O'
+	ACALL sendCharacter
+	MOV A, #'U'
+	ACALL sendCharacter	; manda data no A para o modulo LCD
+	ACALL clearDisplay
+	LJMP START
 ; subrotina colScan
 colScan:
 	JNB P0.4, gotKey	; se col0 esta clear - key encontrada 
@@ -100,7 +141,8 @@ colScan:
 gotKey:
 	SETB F0				; key encontrada - set F0
 	RET					; retorna da subrotina
-
+SALTO_INTERMEDIARIO:
+    SJMP derrota 
 
 
 
@@ -290,20 +332,7 @@ delay:
 	MOV R0, #50
 	DJNZ R0, $
 	RET
-derrota:
-	acall lcd_init
-	MOV A, #'E'
-	ACALL sendCharacter
-	MOV A, #'R'
-	ACALL sendCharacter	
-	MOV A, #'R'
-	ACALL sendCharacter
-	MOV A, #'O'
-	ACALL sendCharacter
-	MOV A, #'U'
-	ACALL sendCharacter	; manda data no A para o modulo LCD
-	ACALL clearDisplay
-	LJMP START
+
 
 venceu:	
 	acall lcd_init
