@@ -13,18 +13,32 @@ org 0000h
 
 org 0030h
 START:
-	
-	MOV 30H,#01h;MONTANDO O VETRO QUE VAI SERVIR PARA MEMORIA
-	MOV 31h,#02h
-	MOV 32h,#03h
-	MOV 33h,#04h
-	MOV 34h,#05h
-	MOV 35h,#06h
-	MOV 36h,#07h
+	CLR A
+	MOV R0, A
+	MOV R1, A
+	MOV R2, A
+	MOV R3, A
+	mov 60h, a
+	MOV R5, A
+
+
+	MOV 30H,#1;MONTANDO O VETRO QUE VAI SERVIR PARA MEMORIA
+	MOV 31h,#2
+	MOV 32h,#3
+	MOV 33h,#4
+	MOV 34h,#5
+	MOV 35h,#6
+	MOV 36h,#7
+	MOV R1, #30H
 
   
 
 	acall lcd_init
+	mov A,#0000h
+	ACALL posicionaCursor
+	ACALL posicionaCursor
+	ACALL posicionaCursor
+	ACALL posicionaCursor
 	MOV A, #'M'
 	ACALL sendCharacter
 	MOV A, #'E'
@@ -48,68 +62,93 @@ START:
 	
 	acall lcd_init
 	clr a
-	mov A,#00h
+	mov A,#0000h
 	ACALL posicionaCursor
 	ACALL posicionaCursor
 	ACALL posicionaCursor
 	ACALL posicionaCursor
-	MOV A, #'U'
+	MOV A, #'A'
 	ACALL sendCharacter	
-	MOV A, #'M'
-	ACALL sendCharacter
 	MOV A, #' '
 	ACALL sendCharacter
-	MOV A, #'N'
+	MOV A, #'S'
+	ACALL sendCharacter
+	MOV A, #'E'
+	ACALL sendCharacter
+	MOV A, #'Q'
 	ACALL sendCharacter
 	MOV A, #'U'
-	ACALL sendCharacter
-	MOV A, #'M'
 	ACALL sendCharacter
 	MOV A, #'E'
 	ACALL sendCharacter	
-	MOV A, #'R'
+	MOV A, #'N'
 	ACALL sendCharacter
-	MOV A, #'O'
+	MOV A, #'C'
 	ACALL sendCharacter	
-	CALL delay
-	ACALL clearDisplay
-
-	
-	MOV A, #00H
-	ACALL posicionaCursor
-	ACALL posicionaCursor
-	ACALL posicionaCursor
-	mov R5, #00h
-	MOV R5, 30H       ; Carrega o endereço 30H em R0
-	acall lcd_init        ; Carrega o valor armazenado no endereço 30H no acumulador
-	mov A,#06H
-	ACALL posicionaCursor
-	MOV A,R5
-	MOV B, #10
-	div AB
-	ADD A,#30H
-	acall sendCharacter
-	MOV A,B
-	ADD A,#30H
+	MOV A, #'I'
 	ACALL sendCharacter
-	ACALL retornaCursor
-
-
+	MOV A, #'A'
+	ACALL sendCharacter		
 	CALL delay
 	ACALL clearDisplay
-	LJMP PRIMEIRO_NUMERO
+
+	ACALL aparecerNumero
+	ACALL UM_NUMERO
+	inc 60h	;incrementa pra proxima vez que ele passar
+	INC R1;NESTE MOMENTO R1=31
+	MOV R0,#0
+	MOV B,#0
+
+
+	ACALL aparecerNumero
+	ACALL UM_NUMERO
+	inc 60h
+	INC R1
+	
 	JMP $
 	
-PRIMEIRO_NUMERO:
-	ACALL leituraTeclado
-	JNB F0, PRIMEIRO_NUMERO
-	CJNE A,B,derrota
-	ACALL SEGUNDO_NUMERO
-SEGUNDO_NUMERO:
-	NOP
+UM_NUMERO:
 
+	ACALL leituraTeclado
+	JNB F0, UM_NUMERO
+	CALL delay
+	MOV A, 30h
+	CJNE A,00H,derrota;VOU ADICIONAR UM CONTADOR PARA RECICLAR A FUNCAO 
+	MOV R0, #00H
+	MOV A, 60h
+	CJNE A,#0,DOIS_NUMEROS
+	RET
+
+DOIS_NUMEROS:
+
+	ACALL leituraTeclado
+	JNB F0, DOIS_NUMEROS
+	CALL delay
+	MOV A,31H
+	CJNE A,00H,derrota
+	CJNE A,#1,DOIS_NUMEROS
+	RET
+
+TRES_NUMEROS:
+NOP
+QUSTRO_NUMEROS:
+NOP
+CINCO_NUMEROS:
+NOP
+SEIS_NUMEROS:
+NOP
+SETE_NUMEROS:
+NOP
 
 derrota:
+	mov r6, #40h
+	ACALL clearDisplay
+	mov a, #0000h
+	ACALL posicionaCursor
+	ACALL posicionaCursor
+	ACALL posicionaCursor
+	ACALL posicionaCursor
+	ACALL posicionaCursor
 	acall lcd_init
 	MOV A, #'E'
 	ACALL sendCharacter
@@ -123,7 +162,24 @@ derrota:
 	ACALL sendCharacter	; manda data no A para o modulo LCD
 	ACALL clearDisplay
 	LJMP START
-	
+aparecerNumero:
+	MOV A, #0H
+	ACALL posicionaCursor
+	ACALL posicionaCursor
+	ACALL posicionaCursor       ; Carrega o endereço 30H em R0
+	acall lcd_init        ; Carrega o valor armazenado no endereço 30H no acumulador
+	mov A,#06H
+	ACALL posicionaCursor
+	MOV A,@r1
+	MOV B, #10
+	div AB
+	ADD A,#30H
+	acall sendCharacter
+	MOV A,B
+	ADD A,#30H
+	ACALL sendCharacter
+	ACALL clearDisplay
+	ret
 
 leituraTeclado:
 	MOV R0, #0			; clear R0 - the first key is key0
