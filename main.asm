@@ -594,6 +594,7 @@ venceu:
 	ACALL posicionaCursor
 	ACALL posicionaCursor
 	ACALL posicionaCursor
+	ACALL posicionaCursor
 	MOV A, #'A'
 	ACALL sendCharacter
 	MOV A, #'C'
