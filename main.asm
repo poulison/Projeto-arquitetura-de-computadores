@@ -105,6 +105,7 @@ START:
 
 	ACALL aparecerNumero
 	ACALL UM_NUMERO
+
 	inc 60h	;incrementa pra proxima vez que ele passar
 	INC R1;NESTE MOMENTO R1=31
 
@@ -112,12 +113,48 @@ START:
 	MOV A, 30h
 
 	ACALL UM_NUMERO
+	inc 60h;60H=2
+	INC R1;R1=32
+;ATE O NUMERO 2
+	ACALL aparecerNumero
+	MOV A, 30h
+
+	ACALL UM_NUMERO
 	inc 60h
 	INC R1
-	
+	;ATE O NUMERO 3
+	ACALL aparecerNumero
+	MOV A, 30h
+
+	ACALL UM_NUMERO
+	inc 60h
+	INC R1
+;ATE O NUMERO 4
+	ACALL aparecerNumero
+	MOV A, 30h
+
+	ACALL UM_NUMERO
+	inc 60h
+	INC R1
+;ATE O NUEMRO 5
+	ACALL aparecerNumero
+	MOV A, 30h
+
+	ACALL UM_NUMERO
+	inc 60h
+	INC R1
+;ATE O NUMERO 6
+	ACALL aparecerNumero
+	MOV A, 30h
+
+	ACALL UM_NUMERO
+	inc 60h
+	INC R1
+;ATE O NUMERO 7
 	JMP $
 	
 UM_NUMERO:
+	mov r6, #1
 
 	ACALL leituraTeclado
 	JNB F0, UM_NUMERO
@@ -130,15 +167,17 @@ UM_NUMERO:
 	MOV R0,A
 
 	MOV A, 30h
-	CJNE A,00H,derrota;VOU ADICIONAR UM CONTADOR PARA RECICLAR A FUNCAO 
+
+	CJNE A,00H,caminho;VOU ADICIONAR UM CONTADOR PARA RECICLAR A FUNCAO 
 	MOV R0, #00H
-	mov r6,#3
 	MOV A, 60h
 	CLR F0
+
 	CJNE A,#0,DOIS_NUMEROS
 	RET
 
 DOIS_NUMEROS:
+	MOV R6, #2
 	ACALL leituraTeclado
 	JNB F0, DOIS_NUMEROS
 	CALL delay
@@ -150,7 +189,9 @@ DOIS_NUMEROS:
 	MOV R0,A
 
 	MOV A,31H
-	CJNE A,00H,derrota
+
+	CJNE A,00H,caminho
+
 	MOV R0, #00H
 	CLR F0
 	MOV A, 60h
@@ -158,15 +199,114 @@ DOIS_NUMEROS:
 	RET
 
 TRES_NUMEROS:
-NOP
-QUSTRO_NUMEROS:
-NOP
+	MOV R6, #3
+	ACALL leituraTeclado
+	JNB F0, TRES_NUMEROS
+	CALL delay
+	MOV A,#40H
+
+	ADD A,R0
+	MOV R0,A
+	MOV A,@R0
+	MOV R0,A
+
+	MOV A,32H
+
+	CJNE A,00H,caminho
+
+	MOV R0, #00H
+	CLR F0
+	MOV A, 60h
+	CJNE A,#2,QUATRO_NUMEROS
+	RET
+caminho:
+acall derrota
+
+QUATRO_NUMEROS:
+	MOV R6, #4
+	ACALL leituraTeclado
+	JNB F0, QUATRO_NUMEROS
+	CALL delay
+	MOV A,#40H
+
+	ADD A,R0
+	MOV R0,A
+	MOV A,@R0
+	MOV R0,A
+
+	MOV A,33H
+
+	CJNE A,00H,derrota
+
+	MOV R0, #00H
+	CLR F0
+	MOV A, 60h
+	CJNE A,#3,CINCO_NUMEROS
+	RET
+
 CINCO_NUMEROS:
-NOP
+	MOV R6, #5
+	ACALL leituraTeclado
+	JNB F0, CINCO_NUMEROS
+	CALL delay
+	MOV A,#40H
+
+	ADD A,R0
+	MOV R0,A
+	MOV A,@R0
+	MOV R0,A
+
+	MOV A,34H
+
+	CJNE A,00H,derrota
+
+	MOV R0, #00H
+	CLR F0
+	MOV A, 60h
+	CJNE A,#4,SEIS_NUMEROS
+	RET
+
 SEIS_NUMEROS:
-NOP
+	MOV R6, #6
+	ACALL leituraTeclado
+	JNB F0, SEIS_NUMEROS
+	CALL delay
+	MOV A,#40H
+
+	ADD A,R0
+	MOV R0,A
+	MOV A,@R0
+	MOV R0,A
+
+	MOV A,35H
+
+	CJNE A,00H,derrota
+
+	MOV R0, #00H
+	CLR F0
+	MOV A, 60h
+	CJNE A,#5,SETE_NUMEROS
+	RET
+
 SETE_NUMEROS:
-NOP
+	MOV R6, #7
+	ACALL leituraTeclado
+	JNB F0, SETE_NUMEROS
+	CALL delay
+	MOV A,#40H
+
+	ADD A,R0
+	MOV R0,A
+	MOV A,@R0
+	MOV R0,A
+
+	MOV A,36H
+
+	CJNE A,00H,derrota
+
+ACALL venceu
+	RET
+
 
 derrota:
 	ACALL clearDisplay
@@ -449,6 +589,11 @@ delay:
 
 venceu:	
 	acall lcd_init
+	mov A,#0000h
+	ACALL posicionaCursor
+	ACALL posicionaCursor
+	ACALL posicionaCursor
+	ACALL posicionaCursor
 	MOV A, #'A'
 	ACALL sendCharacter
 	MOV A, #'C'
