@@ -19,8 +19,19 @@ START:
 	MOV R2, A
 	MOV R3, A
 	mov 60h, a
-	MOV R5, A
-
+	MOV r5, A
+	CLR F0
+	
+ 	MOV 41H, #0
+	MOV 43H, #9
+	MOV 44H, #8
+	MOV 45H, #7
+	MOV 46H, #6
+	MOV 47H, #5
+	MOV 48H, #4
+	MOV 49H, #3
+	MOV 4AH, #2
+	MOV 4BH, #1
 
 	MOV 30H,#1;MONTANDO O VETRO QUE VAI SERVIR PARA MEMORIA
 	MOV 31h,#2
@@ -96,11 +107,10 @@ START:
 	ACALL UM_NUMERO
 	inc 60h	;incrementa pra proxima vez que ele passar
 	INC R1;NESTE MOMENTO R1=31
-	MOV R0,#0
-	MOV B,#0
-
 
 	ACALL aparecerNumero
+	MOV A, 30h
+
 	ACALL UM_NUMERO
 	inc 60h
 	INC R1
@@ -112,21 +122,39 @@ UM_NUMERO:
 	ACALL leituraTeclado
 	JNB F0, UM_NUMERO
 	CALL delay
+
+	MOV A,#40H
+	ADD A,R0
+	MOV R0,A
+	MOV A,@R0
+	MOV R0,A
+
 	MOV A, 30h
 	CJNE A,00H,derrota;VOU ADICIONAR UM CONTADOR PARA RECICLAR A FUNCAO 
 	MOV R0, #00H
+	mov r6,#3
 	MOV A, 60h
+	CLR F0
 	CJNE A,#0,DOIS_NUMEROS
 	RET
 
 DOIS_NUMEROS:
-
 	ACALL leituraTeclado
 	JNB F0, DOIS_NUMEROS
 	CALL delay
+	MOV A,#40H
+
+	ADD A,R0
+	MOV R0,A
+	MOV A,@R0
+	MOV R0,A
+
 	MOV A,31H
 	CJNE A,00H,derrota
-	CJNE A,#1,DOIS_NUMEROS
+	MOV R0, #00H
+	CLR F0
+	MOV A, 60h
+	CJNE A,#1,TRES_NUMEROS
 	RET
 
 TRES_NUMEROS:
@@ -141,7 +169,6 @@ SETE_NUMEROS:
 NOP
 
 derrota:
-	mov r6, #40h
 	ACALL clearDisplay
 	mov a, #0000h
 	ACALL posicionaCursor
