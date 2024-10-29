@@ -158,6 +158,7 @@ UM_NUMERO:
 	mov r6, #1
 
 	ACALL leituraTeclado
+	mov 70h, r0
 	JNB F0, UM_NUMERO
 	CALL delay
 
@@ -599,6 +600,8 @@ venceu:
 	MOV A, #'A'
 	ACALL sendCharacter
 	MOV A, #'C'
+	ACALL sendCharacter	
+	MOV A, #'E'
 	ACALL sendCharacter	
 	MOV A, #'R'
 	ACALL sendCharacter
