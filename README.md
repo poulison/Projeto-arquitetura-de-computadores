@@ -59,3 +59,17 @@ A rotina `leituraTeclado` escaneia o teclado em busca de teclas pressionadas. A 
 -   Abra o EdSim51 e carregue o código.
 -   Compile e execute o código para iniciar o jogo.
 -   Utilize o keypad conforme as instruções exibidas no display para jogar.
+
+## Imagens do funcionamento:
+
+![image](https://github.com/user-attachments/assets/bd6bdeca-be3f-4d9c-8d2d-8049bbd68df7)
+
+![image](https://github.com/user-attachments/assets/16456392-77d5-4899-871b-ef4c24cac552)
+
+![image](https://github.com/user-attachments/assets/42ad7505-f7c1-4fcf-b957-53d320f64af9)
+
+![image](https://github.com/user-attachments/assets/1ff4a42e-006a-479c-9b16-eeffd675810e)
+
+
+
+
