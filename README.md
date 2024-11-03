@@ -70,7 +70,7 @@ A rotina `leituraTeclado` escaneia o teclado em busca de teclas pressionadas. A 
 
 ![image](https://github.com/user-attachments/assets/1ff4a42e-006a-479c-9b16-eeffd675810e)
 
-## Diagrama de blocos:
+## Fluxograma:
 
 ![image](https://github.com/user-attachments/assets/6f9f30e5-cc2b-4e8a-a8bb-dd4db6ca9fc9)
 
