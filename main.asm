@@ -1,5 +1,6 @@
 
 
+
 ;Paulo Andre de Oliveira Hirata RA:24.123.086-1
 ;Victor Merker Binda RA:24.223.086-0
 
@@ -22,7 +23,7 @@ START:
 	mov 60h, a
 	MOV r5, A
 	CLR F0
-	
+	;limpo as variaveis que eu uso durante o prgrama
  	MOV 41H, #0
 	MOV 43H, #9
 	MOV 44H, #8
@@ -33,6 +34,7 @@ START:
 	MOV 49H, #3
 	MOV 4AH, #2
 	MOV 4BH, #1
+; aloquei esses numeros para converter o valor do keypad
 
 	MOV 30H,#1;MONTANDO O VETRO QUE VAI SERVIR PARA MEMORIA
 	MOV 31h,#2
@@ -42,7 +44,7 @@ START:
 	MOV 35h,#6
 	MOV 36h,#7
 	MOV R1, #30H
-
+;numeros do jogo da memoria
   
 
 	acall lcd_init
@@ -70,7 +72,7 @@ START:
 	CALL delay
 	ACALL clearDisplay
 	
-
+;texto para resumri como funciona
 	
 	acall lcd_init
 	clr a
@@ -107,55 +109,54 @@ START:
 	ACALL aparecerNumero
 	ACALL UM_NUMERO
 
-	inc 60h	;incrementa pra proxima vez que ele passar
-	INC R1;NESTE MOMENTO R1=31
-
+	inc 60h	;incrementa pra proxima vez que ele passar pela função um numero ele ir para funcao de dosi numeros
+	INC R1;eu inceremento o r1 para qunado camahar a funcao de aparecer numero ela aparecer o numero do proximo vetor
 	ACALL aparecerNumero
-	MOV A, 30h
+	MOV A, 30h;eu volto pro primeiro numero do vetor
 
 	ACALL UM_NUMERO
-	inc 60h;60H=2
-	INC R1;R1=32
+	inc 60h;inc para proxima vez que passar pela função um numero ele continaur o jogo
+	INC R1;eu inceremento o r1 para qunado camahar a funcao de aparecer numero ela aparecer o numero do proximo vetor
 ;ATE O NUMERO 2
 	ACALL aparecerNumero
 	MOV A, 30h
 
 	ACALL UM_NUMERO
-	inc 60h
-	INC R1
+	inc 60h;inc para proxima vez que passar pela função um numero ele continaur o jogo
+	INC R1;eu inceremento o r1 para qunado camahar a funcao de aparecer numero ela aparecer o numero do proximo vetor
 	;ATE O NUMERO 3
 	ACALL aparecerNumero
-	MOV A, 30h
+	MOV A, 30h;eu volto pro primeiro numero do vetor
 
 	ACALL UM_NUMERO
-	inc 60h
-	INC R1
+	inc 60h;inc para proxima vez que passar pela função um numero ele continaur o jogo
+	INC R1;eu inceremento o r1 para qunado camahar a funcao de aparecer numero ela aparecer o numero do proximo vetor
 ;ATE O NUMERO 4
 	ACALL aparecerNumero
 	MOV A, 30h
-
+;eu volto pro primeiro numero do vetor
 	ACALL UM_NUMERO
-	inc 60h
-	INC R1
+	inc 60h;inc para proxima vez que passar pela função um numero ele continaur o jogo
+	INC R1;eu inceremento o r1 para qunado camahar a funcao de aparecer numero ela aparecer o numero do proximo vetor
 ;ATE O NUEMRO 5
 	ACALL aparecerNumero
-	MOV A, 30h
+	MOV A, 30h;eu volto pro primeiro numero do vetor
 
 	ACALL UM_NUMERO
-	inc 60h
-	INC R1
+	inc 60h;inc para proxima vez que passar pela função um numero ele continaur o jogo
+	INC R1;eu inceremento o r1 para qunado camahar a funcao de aparecer numero ela aparecer o numero do proximo vetor
 ;ATE O NUMERO 6
 	ACALL aparecerNumero
-	MOV A, 30h
+	MOV A, 30h;eu volto pro primeiro numero do vetor
 
 	ACALL UM_NUMERO
-	inc 60h
-	INC R1
+	inc 60h;inc para proxima vez que passar pela função um numero ele continaur o jogo
+	INC R1;eu inceremento o r1 para qunado camahar a funcao de aparecer numero ela aparecer o numero do proximo vetor
 ;ATE O NUMERO 7
 	JMP $
 	
 UM_NUMERO:
-	mov r6, #1
+	mov r6, #1;eu botei esse numero para podermos ver qunaod o botao foi apertado 
 
 	ACALL leituraTeclado
 	mov 70h, r0
@@ -165,21 +166,21 @@ UM_NUMERO:
 	MOV A,#40H
 	ADD A,R0
 	MOV R0,A
-	MOV A,@R0
+	MOV A,@R0;converter os nuemros do keypad
 	MOV R0,A
 
 	MOV A, 30h
 
-	CJNE A,00H,caminho;VOU ADICIONAR UM CONTADOR PARA RECICLAR A FUNCAO 
+	CJNE A,00H,caminho;vai para funcao de derrota caso ele nao bote o nuemro igualaqui que ele verifica se é igual
 	MOV R0, #00H
 	MOV A, 60h
 	CLR F0
 
-	CJNE A,#0,DOIS_NUMEROS
+	CJNE A,#0,DOIS_NUMEROS;aqui ele verifica se é a primeira vez que o usuario passa aqui
 	RET
 
 DOIS_NUMEROS:
-	MOV R6, #2
+	MOV R6, #2;eu botei esse numero para podermos ver qunaod o botao foi apertado
 	ACALL leituraTeclado
 	JNB F0, DOIS_NUMEROS
 	CALL delay
@@ -192,16 +193,16 @@ DOIS_NUMEROS:
 
 	MOV A,31H
 
-	CJNE A,00H,caminho
+	CJNE A,00H,caminho;vai para funcao de derrota caso ele nao bote o nuemro igualaqui que ele verifica se é igual
 
 	MOV R0, #00H
 	CLR F0
 	MOV A, 60h
-	CJNE A,#1,TRES_NUMEROS
+	CJNE A,#1,TRES_NUMEROS;aqui ele verifica se é a primeira vez que o usuario passa aqui
 	RET
 
 TRES_NUMEROS:
-	MOV R6, #3
+	MOV R6, #3;eu botei esse numero para podermos ver qunaod o botao foi apertado
 	ACALL leituraTeclado
 	JNB F0, TRES_NUMEROS
 	CALL delay
@@ -214,18 +215,18 @@ TRES_NUMEROS:
 
 	MOV A,32H
 
-	CJNE A,00H,caminho
+	CJNE A,00H,caminho;vai para funcao de derrota caso ele nao bote o nuemro igualaqui que ele verifica se é igual
 
 	MOV R0, #00H
 	CLR F0
 	MOV A, 60h
-	CJNE A,#2,QUATRO_NUMEROS
+	CJNE A,#2,QUATRO_NUMEROS;aqui ele verifica se é a primeira vez que o usuario passa aqui
 	RET
 caminho:
 acall derrota
 
 QUATRO_NUMEROS:
-	MOV R6, #4
+	MOV R6, #4;eu botei esse numero para podermos ver qunaod o botao foi apertado
 	ACALL leituraTeclado
 	JNB F0, QUATRO_NUMEROS
 	CALL delay
@@ -238,16 +239,16 @@ QUATRO_NUMEROS:
 
 	MOV A,33H
 
-	CJNE A,00H,derrota
+	CJNE A,00H,derrota;vai para funcao de derrota caso ele nao bote o nuemro igual
 
 	MOV R0, #00H
 	CLR F0
 	MOV A, 60h
-	CJNE A,#3,CINCO_NUMEROS
+	CJNE A,#3,CINCO_NUMEROS;aqui ele verifica se é a primeira vez que o usuario passa aqui
 	RET
 
 CINCO_NUMEROS:
-	MOV R6, #5
+	MOV R6, #5;eu botei esse numero para podermos ver qunaod o botao foi apertado
 	ACALL leituraTeclado
 	JNB F0, CINCO_NUMEROS
 	CALL delay
@@ -260,16 +261,16 @@ CINCO_NUMEROS:
 
 	MOV A,34H
 
-	CJNE A,00H,derrota
+	CJNE A,00H,derrota;vai para funcao de derrota caso ele nao bote o nuemro igualaqui que ele verifica se é igual
 
 	MOV R0, #00H
 	CLR F0
 	MOV A, 60h
-	CJNE A,#4,SEIS_NUMEROS
+	CJNE A,#4,SEIS_NUMEROS;aqui ele verifica se é a primeira vez que o usuario passa aqui
 	RET
 
 SEIS_NUMEROS:
-	MOV R6, #6
+	MOV R6, #6;eu botei esse numero para podermos ver qunaod o botao foi apertado
 	ACALL leituraTeclado
 	JNB F0, SEIS_NUMEROS
 	CALL delay
@@ -282,7 +283,7 @@ SEIS_NUMEROS:
 
 	MOV A,35H
 
-	CJNE A,00H,derrota
+	CJNE A,00H,derrota;vai para funcao de derrota caso ele nao bote o nuemro igualaqui que ele verifica se é igual
 
 	MOV R0, #00H
 	CLR F0
@@ -291,7 +292,7 @@ SEIS_NUMEROS:
 	RET
 
 SETE_NUMEROS:
-	MOV R6, #7
+	MOV R6, #7;eu botei esse numero para podermos ver qunaod o botao foi apertado
 	ACALL leituraTeclado
 	JNB F0, SETE_NUMEROS
 	CALL delay
@@ -304,9 +305,9 @@ SETE_NUMEROS:
 
 	MOV A,36H
 
-	CJNE A,00H,derrota
+	CJNE A,00H,derrota;vai para funcao de derrota caso ele nao bote o nuemro igual
 
-ACALL venceu
+ACALL venceu ;chama a função caso ele acerte todos
 	RET
 
 
@@ -335,17 +336,16 @@ aparecerNumero:
 	MOV A, #0H
 	ACALL posicionaCursor
 	ACALL posicionaCursor
-	ACALL posicionaCursor       ; Carrega o endereço 30H em R0
-	acall lcd_init        ; Carrega o valor armazenado no endereço 30H no acumulador
-	mov A,#06H
+	ACALL posicionaCursor      
+	acall lcd_init       
 	ACALL posicionaCursor
-	MOV A,@r1
+	MOV A,@r1;uso o r1 como vetor pois eu incremento ele toda vez depois que eu chamo a função um numero
 	MOV B, #10
 	div AB
 	ADD A,#30H
 	acall sendCharacter
 	MOV A,B
-	ADD A,#30H
+	ADD A,#30H;;aqui ele ajusta o valor para aparecer no lcd
 	ACALL sendCharacter
 	ACALL clearDisplay
 	ret
